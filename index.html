@@ -3,6 +3,7 @@
 <head>
   <title>Andeckle Time Tracker</title>
   <link href='http://fonts.googleapis.com/css?family=Lobster+Two:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
   <link rel="stylesheet" type="text/css" href="css/andeckle.css">
@@ -11,21 +12,37 @@
   <script src="js/andeckle-app.js"></script>
   <script src="js/andeckle-controllers.js"></script>
 </head>
-<body>
+<body ng-app="andeckle">
+<div ng-controller="AndeckleController as aControl">
   <div class="row">
-    <div class="col-md-12 center-align"><img src="img/andeckle.png"></div>
-    <div class="col-md-12 sub-header center-align">Time management simplified...</div>
+    <div class="col-md-12 center-align"><img src="{{aControl.logoPath}}"></div>
+    <div class="col-md-12 sub-header center-align" ng-bind="aControl.appTag"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 center-align gen-margin">
+      <h4 class="">Time Logged</h4>
+      <form>
+          <input type="number" class="timer-text-box" placeholder="0">
+          <label for="second">:</label>
+          <input type="number" class="timer-text-box" placeholder="00"><br>
+          <button type="submit" class="btn btn-default button-margin">Log Time</button>
+      </form>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-4 left-panel">
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <h3 class="panel-header center-align">Timer Function</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </div>
-    <div class="col-md-4 center-panel"> 
+    <div class="col-md-4 center-panel">
+      <h3 class="panel-header center-align">History</h3>
       <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     </div>
-    <div class="col-md-4 right-panel"> 
+    <div class="col-md-4 right-panel">
+      <h3 class="panel-header center-align">Tags</h3>
       <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
     </div>
   </div>
+</div>
 </body>
 </html>
