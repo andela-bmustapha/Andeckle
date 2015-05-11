@@ -1,5 +1,4 @@
-# Andeckle
-Online time tracker in AngularJS
+# Andeckle Online Time Tracker
 
 
 Andeckle Time Tracker is an Andela App created in AngularJS to help in keeping check on time spent on projects or other similar time based activities.
