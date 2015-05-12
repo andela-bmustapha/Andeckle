@@ -2,24 +2,43 @@
 <html>
 <head>
   <title>Andeckle Time Tracker</title>
-  <link href='http://fonts.googleapis.com/css?family=Lobster+Two:700' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
+
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
   <link rel="stylesheet" type="text/css" href="css/andeckle.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+
+  
+
   <script src="js/bootstrap.min.js"></script>
   <script src="js/andeckle-controllers.js"></script>
 </head>
 <body ng-app="andeckle">
+<div class="container">
 <div ng-controller="AndeckleController as aControl">
   <div class="row">
-    <div class="col-md-12 center-align"><img src="{{aControl.logoPath}}"></div>
-    <div class="col-md-12 sub-header center-align" ng-bind="aControl.appTag"></div>
+    <div class="col-md-12 left-align"><img src="img/andeckle.png" class="responsive-image"></div>
+    <div class="col-md-12 sub-header left-align" ng-bind="aControl.appTag"></div>
   </div>
-  <div class="row">
+  <div class="row" ng-hide="!aControl.completeData.name">
+    <div class="col-md-12 left-align">Timer shows up here...</div>
+  </div>
+
+  <div class="row" ng-hide="aControl.completeData.name">
+    <div class="col-md-12 center-align">
+      <p>Please enter your name: <br>
+      <input type="text" class="timer-text-box" placeholder="Name" ng-model="aControl.userName" required><br>
+      <button type="submit" class="btn btn-primary" ng-click="aControl.saveName()">Save</button>
+      </p>
+    </div>
+  </div>
+
+
+  <div class="row" ng-hide="!aControl.completeData.name">
     <div class="col-md-12 center-align gen-margin">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Log Time Manually</button>
       <!-- Modal -->
@@ -32,14 +51,19 @@
             </div>
             <div class="modal-body">
               <form>
-                <input type="number" class="timer-text-box timer-text-box-size" placeholder="0">
+                <label for="time" class ="description"><span class="description">Time Logged</span></label><br>
+                <input type="number" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerHours" required>
                 <label for="mid-colon" class ="mid-colon">:</label>
-                <input type="number" class="timer-text-box timer-text-box-size" placeholder="00"><br>
-                <label for="tags" class="description"><span class="description">Tags:</span></label><br>
-                <input type="text" class="timer-text-box" placeholder="Enter tags"><br><br>
-                <label for="description" class="description"><span class="description">Description:</span></label><br>
-                <textarea rows="4" cols="40" class="timer-text-box" placeholder="Enter Description"></textarea><br><br>
-                <button type="submit" class="btn btn-default button-margin">Log Time</button>
+                <input type="number" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" required>
+                <label for="mid-colon" class ="mid-colon">:</label>
+                <input type="number" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerSeconds" required><br>
+                <label for="tags" class="description"><span class="description">Tags</span></label>
+                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" required>
+                <label for="date" class="description"><span class="description">Date</span></label>
+                <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
+                <label for="description" class="description"><span class="description">Description</span></label><br>
+                <textarea rows="4" cols="40" class="timer-text-box" placeholder="Enter Description" ng-model="aControl.timerDescription"></textarea><br><br>
+                <button type="submit" class="btn btn-default button-margin" ng-click="aControl.manualTimeLogger()">Log Time</button>
               </form>
             </div>
             <div class="modal-footer">
@@ -50,24 +74,19 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row" ng-hide="!aControl.completeData.name">
     <div class="col-md-4 left-panel">
       <h3 class="panel-header center-align">Timer Function</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </div>
     <div class="col-md-4 center-panel">
       <h3 class="panel-header center-align">History</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     </div>
     <div class="col-md-4 right-panel">
       <h3 class="panel-header center-align">Tags</h3>
-      <ul>
-        <li ng-repeat="x in aControl.data">
-          {{ x }}
-        </li>
-      </ul>
     </div>
   </div>
 </div>
+</div>
+
 </body>
 </html>
