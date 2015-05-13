@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
+  <link href="css/roboto.min.css" rel="stylesheet">
+  <link href="css/material.min.css" rel="stylesheet">
+  <link href="css/ripples.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/andeckle.css">
   
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
@@ -57,7 +60,8 @@
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Log Time Manually</button>
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Log Time Manually</button>
+
       <!-- Modal -->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -71,13 +75,13 @@
                 <label for="time" class ="description"><span class="description">Time Logged</span></label><br>
                 <input type="number" name="hour" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerHours" required>
                 <label for="mid-colon" class ="mid-colon">:</label>
-                <input type="number" name="minute" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" required><br>
+                <input type="number" name="minute" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" max="59" required><br>
                 <label for="tags" class="description"><span class="description">Tags</span></label>
-                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" required>
+                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" maxlength="20" required>
                 <label for="date" class="description"><span class="description">Date</span></label>
                 <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
                 <label for="description" class="description"><span class="description">Description</span></label><br>
-                <textarea rows="4" cols="40" class="timer-text-box" placeholder="Enter Description" ng-model="aControl.timerDescription"></textarea><br><br>
+                <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
                 <button type="button" class="btn btn-default button-margin" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Log Time</button>
               </form>
             </div>
@@ -87,27 +91,73 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal for editing-->
+      <div id="editModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Edit Time Log</h4>
+            </div>
+            <div class="modal-body">
+              <form name="manualLog" novalidate>
+                <label for="time" class ="description"><span class="description">Time Logged</span></label><br>
+                <input type="number" name="hour" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerHours" required>
+                <label for="mid-colon" class ="mid-colon">:</label>
+                <input type="number" name="minute" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" max="59" required><br>
+                <label for="tags" class="description"><span class="description">Tags</span></label><br>
+                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" maxlength="20" required><br>
+                <label for="description" class="description"><span class="description">Description</span></label><br>
+                <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
+                <button type="button" class="btn btn-default button-margin" ng-disabled="aControl.checkEditInvalid()" ng-click="aControl.saveEdit()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Save</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   <div class="row" ng-hide="!aControl.completeData.name">
     <div class="col-md-3 left-panel">
       <h3 class="panel-header center-align">Timer Function</h3>
     </div>
-    <div class="col-md-7 center-panel">
+    <div class="col-md-8 center-panel">
       <h3 class="panel-header center-align">History</h3>
-      <div class="row left-panel history-div" ng-repeat="timeTagged in aControl.completeData.timeTagged">
-        <div class="col-md-6 left-panel">
-          <i class="fa fa-user fa-lg"></i><span class="i-name">{{aControl.completeData.name}}</span><br>
-          {{timeTagged.comment}}
+      <div class="row" ng-repeat="timeTagged in aControl.completeData.timeTagged">
+        
+        <div class="col-md-12 fonted">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{timeTagged.comment}}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <i class="fa fa-user fa-lg"></i><span class="i-name">{{aControl.completeData.name}}</span><br>
+                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" ng-click="aControl.editTime($index)">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
+                  </button> | <button type="button" class="btn btn-danger btn-sm" ng-click="aControl.deleteTime($index)">
+                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
+                              </button>
+                </div>
+                <div class="col-md-6">
+                  {{timeTagged.date}}<br>
+                  {{timeTagged.tags}}<br>
+                  {{timeTagged.hour}} hours : {{timeTagged.minute}} minutes
+                </div>  
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-6 left-panel">
-          {{timeTagged.date}}<br>
-          {{timeTagged.tags}}<br>
-          {{timeTagged.hour}} : {{timeTagged.minute}}
-        </div>
+
       </div>
     </div>
-    <div class="col-md-2 right-panel">
+    <div class="col-md-1 right-panel">
       <h3 class="panel-header center-align">Tags</h3>
     </div>
   </div>

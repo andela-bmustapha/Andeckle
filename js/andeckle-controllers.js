@@ -12,9 +12,7 @@ angular.module('andeckle', ['ngStorage'])
   //set up default local storage in case none is available
   self.completeData = {
     name: '',
-    timeTagged: [
-      { tags: '#training #trainingInProgress', comment: 'Training', hour: 2, minute: 34, date: 'Fri May 22 2015' }
-    ]
+    timeTagged: []
   };
 
   // check if local storage is not set, and set accordingly
@@ -24,24 +22,36 @@ angular.module('andeckle', ['ngStorage'])
     self.completeData = $localStorage.completeData;
   }
 
-  console.log($localStorage.completeData);
-
   // define models
-  self.timerHours = 0; // model for hours
-  self.timerMinutes = 0;  // model for minutes
+  self.timerHours = ''; // model for hours
+  self.timerMinutes = '';  // model for minutes
   self.timerTags = '';  // model for tags
   self.timerDescription = '';  // model for description
   self.timerDate = '';  // model for date
 
   self.userName = '';  // model for name
-  self.newDateString = '';
+  self.currentIndex = 0; // variable to hold index of log to edit
 
   self.checkData = function() {
-    if ((typeof self.timerHours === 'number' && self.timerHours > 0) && (typeof self.timerMinutes === 'number' && self.timerMinutes > 0) && (typeof self.timerTags === 'string' && self.timerTags.length > 0) && (typeof self.timerDate === 'object') && (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)) {//&& (typeof self.timerMinutes !== 'number') && self.timerTags !== '' && self.timerDescription !== '' && self.timerDate !== '')
+    if ((typeof self.timerHours === 'number' && self.timerHours > 0) && (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && (typeof self.timerTags === 'string' && self.timerTags.length > 0) && (typeof self.timerDate === 'object') && (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)) {//&& (typeof self.timerMinutes !== 'number') && self.timerTags !== '' && self.timerDescription !== '' && self.timerDate !== '')
       return false;
     } else {
       return true;
     }
+  }
+
+  // function for edit modal box
+  self.checkEditData = function() {
+    if ((typeof self.timerHours === 'number' && self.timerHours > 0) && (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && (typeof self.timerTags === 'string' && self.timerTags.length > 0) && (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)) {//&& (typeof self.timerMinutes !== 'number') && self.timerTags !== '' && self.timerDescription !== '' && self.timerDate !== '')
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // function checkEditInvalid
+  self.checkEditInvalid = function() {
+    return self.checkEditData();
   }
 
   self.checkInvalid = function() {
@@ -57,36 +67,72 @@ angular.module('andeckle', ['ngStorage'])
   // reset all data models
   self.resetDataModels = function() {
     // reset all used models
-    self.newDateString = '';
+    self.timerDate = '';
     self.timerTags = '';
     self.timerDescription = '';
-    self.timerHours = 0;
-    self.timerMinutes = 0;
+    self.timerHours = '';
+    self.timerMinutes = '';
   }
 
   // define the manual time logger function...
   self.manualTimeLogger = function() {
 
-    var dateString = self.timerDate.toString();
-    for (x = 0; x <= 15; x++) {
-      self.newDateString += dateString[x];
-    }
     // build up an object
     var tempObject = {};
     tempObject.tags = self.timerTags;
     tempObject.comment = self.timerDescription;
     tempObject.hour = self.timerHours;
     tempObject.minute = self.timerMinutes;
-    tempObject.date = self.newDateString;
+    tempObject.date = self.timerDate;
 
     // push object into array
     self.completeData.timeTagged.push(tempObject);
+
+    // send to local storage
+    $localStorage.completeData.timeTagged = self.completeData.timeTagged;
 
     // reset object for later use
     tempObject = {};
 
     // reset all data Models
     self.resetDataModels();
+  };
+
+  // function to edit individual log
+  self.editTime = function(index) {
+    self.currentIndex = index;
+    self.timerTags = self.completeData.timeTagged[index].tags;
+    self.timerDescription = self.completeData.timeTagged[index].comment;
+    self.timerHours = self.completeData.timeTagged[index].hour;
+    self.timerMinutes = self.completeData.timeTagged[index].minute;
+    // self.timerDate = self.completeData.timeTagged[index].date; 
+  }
+
+  // save edited data
+  self.saveEdit = function() {
+    // build up the object
+    var tempObject = {};
+    tempObject.tags = self.timerTags;
+    tempObject.comment = self.timerDescription;
+    tempObject.hour = self.timerHours;
+    tempObject.minute = self.timerMinutes;
+
+    // replace respective elements in the local storage
+    self.completeData.timeTagged[self.currentIndex].tags = tempObject.tags;
+    self.completeData.timeTagged[self.currentIndex].comment = tempObject.comment;
+    self.completeData.timeTagged[self.currentIndex].hour = tempObject.hour;
+    self.completeData.timeTagged[self.currentIndex].minute = tempObject.minute;
+
+    // reset object for later use
+    tempObject = {};
+
+    // reset all data Models
+    self.resetDataModels();
+  }
+
+  // function to delete individual log
+  self.deleteTime = function(index) {
+    self.completeData.timeTagged.splice(index, 1);
   };
 
   // set up the timer functions...
