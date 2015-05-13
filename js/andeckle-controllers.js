@@ -1,6 +1,6 @@
 
 // define controller for the app
-angular.module('andeckle', ['ngStorage'])
+angular.module('andeckle', ['ngStorage', 'angularMoment'])
   .controller('AndeckleController', ['$localStorage', function($localStorage) {
 
   // replace this with self
@@ -122,6 +122,9 @@ angular.module('andeckle', ['ngStorage'])
     self.completeData.timeTagged[self.currentIndex].comment = tempObject.comment;
     self.completeData.timeTagged[self.currentIndex].hour = tempObject.hour;
     self.completeData.timeTagged[self.currentIndex].minute = tempObject.minute;
+
+    // send to local storage
+    $localStorage.completeData.timeTagged = self.completeData.timeTagged;
 
     // reset object for later use
     tempObject = {};
