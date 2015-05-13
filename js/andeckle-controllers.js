@@ -89,6 +89,11 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     // push object into array
     self.completeData.timeTagged.push(tempObject);
 
+    // loop to re-arrange the objects
+    for (x in self.completeData.timeTagged) {
+      self.completeData.timeTagged[x].position = x;
+    }
+
     // send to local storage
     $localStorage.completeData.timeTagged = self.completeData.timeTagged;
 
@@ -139,6 +144,11 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     var answer = confirm('Are you sure you want to delete?\nIt is irreversible!');
     if (answer === true) {
       self.completeData.timeTagged.splice(index, 1);
+      // loop through the just spliced array to update the positions
+      for (x in self.completeData.timeTagged) {
+        self.completeData.timeTagged[x].position = x;
+      }
+      $localStorage.completeData.timeTagged = self.completeData.timeTagged;
     }
   };
 

@@ -125,11 +125,11 @@
     </div>
   </div>
   <div class="row" ng-hide="!aControl.completeData.name">
-    <div class="col-md-3 left-panel">
+    <div class="col-md-3 left-panel well well-lg"> 
       <h3 class="panel-header center-align">Timer Function</h3>
     </div>
-    <div class="col-md-9 center-panel">
-      <h3 class="panel-header center-align">History</h3>
+    <div class="col-md-9 center-panel well well-lg">
+      <h3 class="panel-header center-align panel-heading">History</h3>
       <div class="row" ng-repeat="timeTagged in aControl.completeData.timeTagged | orderBy: '-position'">
         
         <div class="col-md-12 fonted">
@@ -149,7 +149,7 @@
                 </div>
                 <div class="col-md-6">
                   <span class="label label-info">{{timeTagged.hour}} hours</span> : <span class="label label-info">{{timeTagged.minute}} minutes</span> <br><br>
-                  {{timeTagged.tags}}
+                  <span class="bold">{{timeTagged.tags}}</span>
                 </div>  
               </div>
             </div>
@@ -160,6 +160,10 @@
     </div>
 </div>
 </div>
-
+<div id="footer">
+  <div class="container">
+    <p class="text-muted">This Bootstrap Example courtesy <a href="http://www.bootply.com">Bootply.com</a></p>
+  </div>
+</div>
 </body>
 </html>
