@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Log Time Manually</button>
+      <button type="button" class="btn btn-info btn-raised" data-toggle="modal" data-target="#myModal" ng-click="aControl.resetDataModels()">Log Time Manually</button>
 
       <!-- Modal -->
       <div id="myModal" class="modal fade" role="dialog">
@@ -84,11 +84,11 @@
                 <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
                 <label for="description" class="description"><span class="description">Description</span></label><br>
                 <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
-                <button type="button" class="btn btn-default button-margin" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Log Time</button>
+                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Log Time</button>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -112,11 +112,11 @@
                 <input type="text" class="timer-text-box tags-edit" placeholder="Tags" ng-model="aControl.timerTags" maxlength="20" required><br>
                 <label for="description" class="description"><span class="description">Description</span></label><br>
                 <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
-                <button type="button" class="btn btn-default button-margin" ng-disabled="aControl.checkEditInvalid()" ng-click="aControl.saveEdit()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Save</button>
+                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkEditInvalid()" ng-click="aControl.saveEdit()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Save</button>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -130,7 +130,7 @@
     </div>
     <div class="col-md-9 center-panel">
       <h3 class="panel-header center-align">History</h3>
-      <div class="row" ng-repeat="timeTagged in aControl.completeData.timeTagged">
+      <div class="row" ng-repeat="timeTagged in aControl.completeData.timeTagged | orderBy: '-position'">
         
         <div class="col-md-12 fonted">
           <div class="panel panel-primary">
@@ -141,9 +141,9 @@
               <div class="row">
                 <div class="col-md-6">
                   <i class="fa fa-user fa-lg"></i><span class="i-name">{{aControl.completeData.name}}</span><br>
-                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" ng-click="aControl.editTime($index)">
+                  <button type="button" class="btn btn-warning btn-raised btn-sm" data-toggle="modal" data-target="#editModal" ng-click="aControl.editTime(timeTagged.position)">
                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit
-                  </button> | <button type="button" class="btn btn-danger btn-sm" ng-click="aControl.deleteTime($index)">
+                  </button> | <button type="button" class="btn btn-danger btn-raised btn-sm" ng-click="aControl.deleteTime(timeTagged.position)">
                               <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
                               </button>
                 </div>

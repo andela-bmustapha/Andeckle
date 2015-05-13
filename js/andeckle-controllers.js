@@ -84,6 +84,7 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     tempObject.hour = self.timerHours;
     tempObject.minute = self.timerMinutes;
     tempObject.date = self.timerDate;
+    tempObject.position = self.completeData.timeTagged.length;
 
     // push object into array
     self.completeData.timeTagged.push(tempObject);
@@ -105,7 +106,6 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     self.timerDescription = self.completeData.timeTagged[index].comment;
     self.timerHours = self.completeData.timeTagged[index].hour;
     self.timerMinutes = self.completeData.timeTagged[index].minute;
-    // self.timerDate = self.completeData.timeTagged[index].date; 
   }
 
   // save edited data
@@ -135,7 +135,11 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
 
   // function to delete individual log
   self.deleteTime = function(index) {
-    self.completeData.timeTagged.splice(index, 1);
+    self.resetDataModels();
+    var answer = confirm('Are you sure you want to delete?\nIt is irreversible!');
+    if (answer === true) {
+      self.completeData.timeTagged.splice(index, 1);
+    }
   };
 
   // set up the timer functions...
