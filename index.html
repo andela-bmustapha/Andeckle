@@ -31,7 +31,11 @@
     <div class="col-md-12 sub-header left-align" ng-bind="aControl.appTag"></div>
   </div>
   <div class="row" ng-hide="!aControl.completeData.name">
-    <div class="col-md-12 left-align">Timer shows up here...</div>
+    <div class="col-md-12 center-align" ng-show="aControl.timerStarted">
+      <span class="timeCounter" ng-bind="aControl.hourCounted"></span> : 
+      <span class="timeCounter" ng-bind="aControl.minuteCounted"></span> : 
+      <span class="timeCounter" ng-bind="aControl.secondCounted"></span> <button type="submit" class="btn btn-primary btn-sm" ng-click="aControl.timerStop()">Log</button>
+    </div>
   </div>
 
   <div class="row" ng-hide="aControl.completeData.name">
@@ -45,32 +49,33 @@
 
 
   <div class="row" ng-hide="!aControl.completeData.name">
-    <div class="col-md-12 center-align gen-margin">
+    <div class="col-md-12 left-align gen-margin">
       <!-- Success Modal -->
-      <div id="successModal" class="modal fade" role="dialog">
+      <div id="successModal" class="modal fade center-align" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Time Logged</h5>
+              <h5 class="modal-title">Time Logger</h5>
             </div>
             <div class="modal-body">
               Time successfully logged!
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
+              <button type="button" class="btn btn-danger btn-raised btn-sm" data-dismiss="modal">Dismiss</button>
             </div>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-info btn-raised" data-toggle="modal" data-target="#myModal" ng-click="aControl.resetDataModels()">Log Time Manually</button>
+      <button id="manualLogButton" type="button" class="btn btn-info btn-raised" data-toggle="modal" data-target="#myModal" ng-click="aControl.resetDataModels()">Log Time Manually</button>
+      <button type="button" id="openSuccess" data-toggle="modal" data-target="#successModal" ng-hide="true"></button>
 
       <!-- Modal -->
-      <div id="myModal" class="modal fade" role="dialog">
+      <div id="myModal" class="modal fade center-align" role="dialog">
         <div class="modal-dialog">
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Manual Time Logger</h4>
+              <h4 class="modal-title">Time Logger</h4>
             </div>
             <div class="modal-body">
               <form name="manualLog" novalidate>
@@ -84,18 +89,18 @@
                 <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
                 <label for="description" class="description"><span class="description">Description</span></label><br>
                 <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
-                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal" data-toggle="modal" data-target="#successModal">Log Time</button>
+                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal">Log Time</button>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
+              <button type="button" id="manualClose" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Modal for editing-->
-      <div id="editModal" class="modal fade" role="dialog">
+      <div id="editModal" class="modal fade center-align" role="dialog">
         <div class="modal-dialog">
           <!-- Modal content-->
           <div class="modal-content">
@@ -116,7 +121,7 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
+              <button type="button" id="editClose" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -127,8 +132,16 @@
   <div class="row" ng-hide="!aControl.completeData.name">
     <div class="col-md-3 left-panel well well-lg"> 
       <h3 class="panel-header center-align">Timer Function</h3>
+      <div class="row" ng-repeat="function in aControl.timerFunctions">
+        <div class="col-md-12 fonted">
+          <button type="button" class="btn font-wide well well-sm" ng-disabled="aControl.disableAllFunctions" ng-click="aControl.preTimerStart(function)">{{function}}</button>
+        </div>
+      </div>
     </div>
-    <div class="col-md-9 center-panel well well-lg">
+    <div class="col-md-1">
+
+    </div>
+    <div class="col-md-8 center-panel well well-lg">
       <h3 class="panel-header center-align panel-heading">History</h3>
       <div class="row" ng-repeat="timeTagged in aControl.completeData.timeTagged | orderBy: '-position'">
         
@@ -148,7 +161,7 @@
                               </button>
                 </div>
                 <div class="col-md-6">
-                  <span class="label label-info">{{timeTagged.hour}} hours</span> : <span class="label label-info">{{timeTagged.minute}} minutes</span> <br><br>
+                  <span class="label label-info bigger-font">{{timeTagged.hour}} hours</span> : <span class="label label-info bigger-font">{{timeTagged.minute}} minutes</span> <br><br>
                   <span class="bold">{{timeTagged.tags}}</span>
                 </div>  
               </div>
@@ -162,7 +175,7 @@
 </div>
 <div id="footer">
   <div class="container">
-    <p class="text-muted">This Bootstrap Example courtesy <a href="http://www.bootply.com">Bootply.com</a></p>
+    <p>Developed by Mustapha Babatunde for <a href="http://www.andela.co" target="_blank"><img src="img/andela.png"></a></p>
   </div>
 </div>
 </body>
