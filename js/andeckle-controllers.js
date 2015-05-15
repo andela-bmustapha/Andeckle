@@ -27,6 +27,9 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
   */
   self.disableAllFunctions = false;
 
+  // variable to be toggled for automatic time log and manual time log
+  self.hideManualButton = false;
+
   // define models
   self.timerHours = ''; // model for hours
   self.timerMinutes = '';  // model for minutes
@@ -66,6 +69,8 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     self.timerStarted = true;
     // disable all function buttons
     self.disableAllFunctions = true;
+    // hide the manual time log button
+    self.hideManualButton = true;
 
     // set the timerTag model
     self.completeData.timerTag = arg;
@@ -282,6 +287,9 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     // hide the timer
     self.timerStarted = false;
 
+    // show the manual time log button
+    self.hideManualButton = false;
+
     // close the modal
     $('#manualClose').click();
 
@@ -319,16 +327,15 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     // reset object for later use
     tempObject = {};
 
-    // reset all data Models
-    self.resetDataModels();
-
     // close the modal
     $('#editClose').click();
+
+    self.timerDescription = '';
   }
 
   // function to delete individual log
   self.deleteTime = function(index) {
-    self.resetDataModels();
+
     var answer = confirm('Are you sure you want to delete?\nIt is irreversible!');
     if (answer === true) {
       self.completeData.timeTagged.splice(index, 1);
