@@ -3,24 +3,28 @@
 angular.module('andeckle', ['ngStorage', 'angularMoment'])
   .controller('AndeckleController', ['$localStorage', '$interval', function($localStorage, $interval) {
 
+  /* replace this with self to avoid JavaScript 'this' reference
+    issues...
+  */
+  var self = this;
+
+  // set the app tagline
+  self.appTag = 'Time management simplified...';
+
+  // set up the timer functions... Array of tags
+  self.timerFunctions = ['#training', '#project', '#classes', '#lunchBreak', '#teaBreak', '#labs'];
+
   /* Define all models to be used in application
     for correct refernce to enable implementation of 
     continuous time logging
   */
 
-  // replace this with self
-  var self = this;
-
-  // timer ng-show model
+  // variable used to determine if timer has been started... 
   self.timerStarted = false;
 
-  // set the app tagline
-  self.appTag = 'Time management simplified...';
-
-  // set up the timer functions...
-  self.timerFunctions = ['#training', '#project', '#classes', '#lunchBreak', '#teaBreak', '#labs'];
-
-  // timer function buttons disable
+  /* variable to be toggled if timer has been triggered to disable
+    other timer function buttons
+  */
   self.disableAllFunctions = false;
 
   // define models
@@ -37,7 +41,7 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
   self.userName = '';  // model for name
   self.currentIndex = 0; // variable to hold index of log to edit
 
-  //set up default local storage in case none is available
+  //set up default local storage object in case none is available
     self.completeData = {
       name: '',
       timerDate: '',
@@ -51,9 +55,12 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     };
 
 
-  self.preTimerStart = function(arg) {
-
-    console.log(arg);
+  /*
+    Function to be called on timer instantiation or contunuous time log
+    It is placed before the local storage check to make it available 
+    for the check to invoke in case the last timer invoked was not logged.
+  */
+  self.startTimer = function(arg) {
     
     // make the timer visible
     self.timerStarted = true;
@@ -65,19 +72,26 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     self.timerTags = self.completeData.timerTag;
     $localStorage.completeData.timerTag = arg;
     
-    // set the self.timerDate to a new date object
+    // Check if the timer date has been set in the local storage.
     if ((typeof self.completeData.timerDate === 'string') && (self.completeData.timerDate === '')) {
+      /*
+        New timer instantiation, so create a new Date object and store in local storage.
+        Also, get the Time value base don the date object and also store in local storage
+      */
       self.timerDate = new Date();
       self.completeData.timerDate = self.timerDate;
       self.completeData.initMilliseconds = self.timerDate.getTime();
       self.completeData.newVal = self.completeData.initMilliseconds;
     } else {
-      console.log(self.completeData.timerDate);
+      /* timer is currently pending, get the vlaue from local storage
+        and create a new Date object to be stored in the date model for 
+        the time log
+      */
       self.timerDate = new Date(self.completeData.timerDate);
-      console.log(typeof self.timerDate);
     }
-    // automatic timer test
-    self.timer = $interval(function() { self.startTimer(); }, 1000);  
+
+    // automatic timer
+    self.timer = $interval(function() { self.update(); }, 1000);  
   };
 
 
@@ -90,51 +104,53 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     initiated on last app use and continue time log as necessary
   */
   if (!$localStorage.completeData) {
-    $localStorage.completeData = self.completeData;
+    $localStorage.completeData = self.completeData; // store the default object in local storage
   } else {
+    // replace the default object with local storage object
     self.completeData = $localStorage.completeData;
     // check for the presence of the initiMillisecond stored on each time log initiation
-    if (self.completeData.initMilliseconds > 0) {
-      // do some mathematical calculations for time elaspsed
+    if (self.completeData.initMilliseconds > 0) {  // do some mathematical calculations for time elaspsed
+
+      // get the current Time in milliseconds
       var now = new Date().getTime();
+
       // check for difference between the two milliseconds
       var second = Math.floor((now - self.completeData.initMilliseconds) / 1000);
 
-      console.log(second);
-
-      // calculate appriopriate time differences
-      var hours = Math.floor(second / (60 * 60));
+      // calculate appriopriate time phases
+      var hours = Math.floor(second / (60 * 60));  // get the hours in the total seconds
    
-      var divisor_for_minutes = second % (60 * 60);
-      var minutes = Math.floor(divisor_for_minutes / 60);
- 
-      var divisor_for_seconds = divisor_for_minutes % 60;
-      var seconds = Math.ceil(divisor_for_seconds);
-
-      console.log(hours);
-      console.log(minutes);
-      console.log(seconds);
-
-
+      // get the minutes
+      var divisorForMinutes = second % (60 * 60);
+      var minutes = Math.floor(divisorForMinutes / 60);
       
-      // do other necessary checks
-      /*
-      self.hourCounted = (self.completeData.currentHour > 0) ? self.completeData.currentHour : 0;
-      self.minuteCounted = (self.completeData.currentMinute > 0) ? self.completeData.currentMinute : 0;
-      self.secondCounted = (self.completeData.currentSecond > 0) ? self.completeData.currentSecond : 0;
-      */
+      // get the seconds
+      var divisorForSeconds = divisorForMinutes % 60;
+      var seconds = Math.ceil(divisorForSeconds);
+
+      // allocate the time phases to the timer models declared above
       self.timerTags = $localStorage.completeData.timerTag;
       self.hourCounted = hours;
       self.minuteCounted = minutes;
       self.secondCounted = seconds;
+
       //invoke the timer start function to continue time log 
-      self.preTimerStart(self.timerTags);
+      self.startTimer(self.timerTags);
     }
   }
 
 
-  // time display function
-  self.startTimer = function() {
+  // function to be invoked by the save button on first appliction run...
+  self.saveName = function(name) {
+    self.completeData.name = self.userName;
+    $localStorage.completeData.name = self.completeData.name;
+  }
+
+  /*
+    Function update() that gets called every time the interval runs,
+    to update the time display and also update local storage time.
+  */
+  self.update = function() {
     self.secondCounted += 1;
     if (self.secondCounted > 59) {
       self.secondCounted = 0;
@@ -149,51 +165,70 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     self.completeData.currentHour = self.hourCounted;
   };
 
-  self.timerStop = function() {
+  /*
+    function that gets called when timer is stopped.
+    It cancels the $interval variable, enables the disabled buttons,
+    and sets the time count to the appropriate models for time log
+  */
+  self.stopTimer = function() {
+
+    //cancel the $interval variable
     $interval.cancel(self.timer);
+
     // enable all function buttons
     self.disableAllFunctions = false;
+
     // set the required models to the time passed
     self.timerHours = self.hourCounted;
     self.timerMinutes = self.minuteCounted;
+
+    // triggers the time log modal box to complete time log
     $('#manualLogButton').click();
   }
 
-
-
-
-
-
+  
+  /*
+    function used by the checkInvalid() function which the modal box log button ng-disabled directive to ensure that all
+    input elements contain valid and allowd data types and values.
+  */
   self.checkData = function() {
-    if ((typeof self.timerHours === 'number' && self.timerHours >= 0) && (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && (typeof self.timerTags === 'string' && self.timerTags.length > 0) && (typeof self.timerDate === 'object') && (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)) {//&& (typeof self.timerMinutes !== 'number') && self.timerTags !== '' && self.timerDescription !== '' && self.timerDate !== '')
+    if (
+        (typeof self.timerHours === 'number' && self.timerHours >= 0) && 
+        (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && 
+        (typeof self.timerTags === 'string' && self.timerTags.length > 0) && 
+        (typeof self.timerDate === 'object') && 
+        (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)
+      ) {
+
       return false;
     } else {
       return true;
     }
   };
 
-  // function for edit modal box
+  
+  // function called by the checkEditInvalid() for the edit modal box to validate the input values and data types
   self.checkEditData = function() {
-    if ((typeof self.timerHours === 'number' && self.timerHours >= 0) && (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && (typeof self.timerTags === 'string' && self.timerTags.length > 0) && (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)) {//&& (typeof self.timerMinutes !== 'number') && self.timerTags !== '' && self.timerDescription !== '' && self.timerDate !== '')
+    if (
+        (typeof self.timerHours === 'number' && self.timerHours >= 0) && 
+        (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && 
+        (typeof self.timerTags === 'string' && self.timerTags.length > 0) && 
+        (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)
+      ) {
       return false;
     } else {
       return true;
     }
   }
 
-  // function checkEditInvalid
+  // function attached to the ng-disabled directive of the edit time log modal box
   self.checkEditInvalid = function() {
     return self.checkEditData();
   }
 
+  // function attached to the ng-disabled directive of the save time log modal box
   self.checkInvalid = function() {
     return self.checkData();
-  }
-
-  // define the saveName function
-  self.saveName = function(name) {
-    self.completeData.name = self.userName;
-    $localStorage.completeData.name = self.completeData.name;
   }
 
   // reset all data models
@@ -213,6 +248,7 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     self.completeData.currentMinute = 0;
     self.completeData.currentHour = 0;
   }
+
 
   // define the manual time logger function...
   self.manualTimeLogger = function() {
@@ -296,17 +332,11 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     var answer = confirm('Are you sure you want to delete?\nIt is irreversible!');
     if (answer === true) {
       self.completeData.timeTagged.splice(index, 1);
-      // loop through the just spliced array to update the positions
+      // loop through the just spliced array to update their positions
       for (x in self.completeData.timeTagged) {
         self.completeData.timeTagged[x].position = x;
       }
       $localStorage.completeData.timeTagged = self.completeData.timeTagged;
     }
   };
-
-  /* define the timerData Object
-  self.timerData = {
-
-  };
-  */
 }]);

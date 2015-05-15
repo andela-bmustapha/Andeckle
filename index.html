@@ -34,7 +34,7 @@
     <div class="col-md-12 center-align" ng-show="aControl.timerStarted">
       <span class="timeCounter" ng-bind="aControl.hourCounted"></span> : 
       <span class="timeCounter" ng-bind="aControl.minuteCounted"></span> : 
-      <span class="timeCounter" ng-bind="aControl.secondCounted"></span> <button type="submit" class="btn btn-primary btn-sm" ng-click="aControl.timerStop()">Log</button>
+      <span class="timeCounter" ng-bind="aControl.secondCounted"></span> <button type="submit" class="btn btn-primary btn-sm" ng-click="aControl.stopTimer()">Log</button>
     </div>
   </div>
 
@@ -134,7 +134,7 @@
       <h3 class="panel-header center-align">Timer Function</h3>
       <div class="row" ng-repeat="function in aControl.timerFunctions">
         <div class="col-md-12 fonted">
-          <button type="button" class="btn font-wide well well-sm" ng-disabled="aControl.disableAllFunctions" ng-click="aControl.preTimerStart(function)">{{function}}</button>
+          <button type="button" class="btn font-wide well well-sm" ng-disabled="aControl.disableAllFunctions" ng-click="aControl.startTimer(function)">{{function}}</button>
         </div>
       </div>
     </div>
