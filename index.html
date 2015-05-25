@@ -3,25 +3,26 @@
 <head>
   <title>Andeckle Time Tracker</title>
 
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" />
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
+  <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
   <link href="css/roboto.min.css" rel="stylesheet">
   <link href="css/material.min.css" rel="stylesheet">
   <link href="css/ripples.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/andeckle.css">
   
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.js"></script>
   <script src="js/moment.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/0.10.1/angular-moment.min.js"></script>
+  <script src="bower_components/angular-moment/angular-moment.min.js"></script>
 
   
 
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/andeckle-controllers.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="js/controllers/andeckle-controllers.js"></script>
 </head>
 <body ng-app="andeckle">
 <div class="container">
@@ -69,35 +70,7 @@
       <button id="manualLogButton" type="button" class="btn btn-info btn-raised" data-toggle="modal" data-target="#myModal" ng-click="aControl.resetDataModels()" ng-hide="aControl.hideManualButton">Log Time Manually</button>
       <button type="button" id="openSuccess" data-toggle="modal" data-target="#successModal" ng-hide="true"></button>
 
-      <!-- Modal -->
-      <div id="myModal" class="modal fade center-align" role="dialog">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Time Logger</h4>
-            </div>
-            <div class="modal-body">
-              <form name="manualLog" novalidate>
-                <label for="time" class ="description"><span class="description">Time Logged</span></label><br>
-                <input type="number" name="hour" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerHours" required>
-                <label for="mid-colon" class ="mid-colon">:</label>
-                <input type="number" name="minute" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" max="59" required><br>
-                <label for="tags" class="description"><span class="description">Tags</span></label>
-                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" maxlength="20" required>
-                <label for="date" class="description"><span class="description">Date</span></label>
-                <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
-                <label for="description" class="description"><span class="description">Description</span></label><br>
-                <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
-                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal">Log Time</button>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" id="manualClose" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <time-log></time-log>
 
       <!-- Modal for editing-->
       <div id="editModal" class="modal fade center-align" role="dialog">

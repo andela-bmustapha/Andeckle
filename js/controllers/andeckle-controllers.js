@@ -1,6 +1,11 @@
 
 // define controller for the app
 angular.module('andeckle', ['ngStorage', 'angularMoment'])
+  .directive('timeLog', function() {
+    return {
+      templateUrl: 'template/timelogger.html'
+    };
+  })
   .controller('AndeckleController', ['$localStorage', '$interval', function($localStorage, $interval) {
 
   /* replace this with self to avoid JavaScript 'this' reference
@@ -147,6 +152,9 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
 
   // function to be invoked by the save button on first appliction run...
   self.saveName = function(name) {
+    if (self.userName === '') {
+      alert('You need to enter your name!');
+    }
     self.completeData.name = self.userName;
     $localStorage.completeData.name = self.completeData.name;
   }
@@ -199,10 +207,11 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
   self.checkData = function() {
     if (
         (typeof self.timerHours === 'number' && self.timerHours >= 0) && 
-        (typeof self.timerMinutes === 'number' && self.timerMinutes > 0 && self.timerMinutes < 60) && 
+        (typeof self.timerMinutes === 'number' && self.timerMinutes >= 0 && self.timerMinutes < 60) && 
         (typeof self.timerTags === 'string' && self.timerTags.length > 0) && 
         (typeof self.timerDate === 'object') && 
-        (typeof self.timerDescription === 'string' && self.timerDescription.length > 0)
+        (typeof self.timerDescription === 'string' && self.timerDescription.length > 0) &&
+        (self.timerHours > 0 || self.timerMinutes > 0)
       ) {
 
       return false;
@@ -347,3 +356,5 @@ angular.module('andeckle', ['ngStorage', 'angularMoment'])
     }
   };
 }]);
+
+// http://www.codechewing.com/library/replace-rude-swear-words-with-asterisks-javascript/

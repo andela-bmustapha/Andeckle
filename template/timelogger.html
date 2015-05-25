@@ -1,0 +1,29 @@
+<!-- Modal -->
+      <div id="myModal" class="modal fade center-align" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Time Logger</h4>
+            </div>
+            <div class="modal-body">
+              <form name="manualLog" novalidate>
+                <label for="time" class ="description"><span class="description">Time Logged</span></label><br>
+                <input type="number" name="hour" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerHours" required>
+                <label for="mid-colon" class ="mid-colon">:</label>
+                <input type="number" name="minute" class="timer-text-box timer-text-box-size" placeholder="00" ng-model="aControl.timerMinutes" max="59" required><br>
+                <label for="tags" class="description"><span class="description">Tags</span></label>
+                <input type="text" class="timer-text-box tags" placeholder="Tags" ng-model="aControl.timerTags" maxlength="20" required>
+                <label for="date" class="description"><span class="description">Date</span></label>
+                <input type="date" class="timer-text-box date" ng-model="aControl.timerDate" required><br>
+                <label for="description" class="description"><span class="description">Description</span></label><br>
+                <input type="text" class="timer-text-box" placeholder="Description" ng-model="aControl.timerDescription" maxlength="30" required><br><br>
+                <button type="button" class="btn btn-primary btn-raised" ng-disabled="aControl.checkInvalid()" ng-click="aControl.manualTimeLogger()" data-dismiss="modal">Log Time</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="manualClose" class="btn btn-warning btn-raised" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
